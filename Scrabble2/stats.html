@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Game Stats</title>
+   <link rel="stylesheet" href="style.css">
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+   <h1>Game Stats</h1>
+   <div class="stats-container">
+        <h2 id="winner"></h2>
+       <table id="results-table">
+           
+           <thead>
+               <tr>
+                   <th>Rank</th>
+                   <th>Player</th>
+                   <th>Total Score</th>
+                   <th>Average Score</th>
+                   <th>Highest Round Score</th>
+               </tr>
+           </thead>
+           <tbody id="stats-body"></tbody>
+       </table>
+   </div>
+
+   <h2>Game Progress</h2>
+   <canvas id="progress-chart"></canvas>
+   <button onclick="restartGame()">New Game</button>
+
+   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let players = JSON.parse(localStorage.getItem("players")) || [];
+        if (players.length === 0) {
+            document.body.innerHTML = "<h1>Error: No game data found.</h1><button onclick='restartGame()'>New Game</button>";
+            return;
+        }
+
+        // Calculate stats
+        players.forEach(player => {
+            player.totalScore = player.scores.reduce((sum, score) => sum + score, 0);
+            player.averageScore = player.scores.length > 0 ? (player.totalScore / player.scores.length).toFixed(2) : 0;
+            player.highestRound = Math.max(...player.scores, 0);
+        });
+
+        // Sort by total score descending
+        players.sort((a, b) => b.totalScore - a.totalScore);
+
+        // Display winner
+        document.getElementById("winner").textContent = `Winner: ${players[0].name} with ${players[0].totalScore} points!`;
+
+        // Populate stats table
+        let statsBody = document.getElementById("stats-body");
+        players.forEach((player, index) => {
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${player.name}</td>
+                <td>${player.totalScore}</td>
+                <td>${player.averageScore}</td>
+                <td>${player.highestRound}</td>
+            `;
+            statsBody.appendChild(row);
+        });
+
+        // Define fixed colors for chart
+        const playerColors = ["#FF0000", "#0000FF", "#00FF00", "#FFA500", "#800080", "#FFC0CB"];
+
+        // Generate progress chart
+        if (players[0].scores.length > 0) {
+            let ctx = document.getElementById("progress-chart").getContext("2d");
+            let rounds = players[0].scores.map((_, i) => `Round ${i + 1}`);
+
+            let datasets = players.map((player, index) => ({
+                label: player.name,
+                data: player.scores.reduce((acc, score, i) => {
+                    acc.push((acc[i - 1] || 0) + score);
+                    return acc;
+                }, []),
+                borderColor: playerColors[index % playerColors.length],
+                backgroundColor: playerColors[index % playerColors.length],
+                fill: false,
+                tension: 0.2
+            }));
+
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: rounds,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { title: { display: true, text: "Rounds" } }
+                    }
+                }
+            });
+        }
+    });
+
+    function restartGame() {
+        localStorage.clear();
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>

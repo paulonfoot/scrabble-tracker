@@ -1,0 +1,92 @@
+body {
+    font-family:Arial,sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: green;
+}
+
+h1 {
+    color: black;
+    background-color: rgb(47, 179, 35);
+    padding: 10px;
+}
+
+input, select {
+    padding: 10px;
+    font-size:16px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background-color: #4CAF50;
+    color: white;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#playerInputs, #scoreInputs {
+    display: inline-block;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+}
+
+label {
+    font-weight: bold ;
+}
+
+#winner {
+    font-size: 40px;
+    font-weight: bold;
+    color: yellow;
+    margin: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+
+
+#stats-body, thead {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin: 20px;
+    list-style-type: none;
+    padding: 0;
+    text-align: centre;
+}
+
+table{
+    border: 1px;
+    border-color : white;
+    border-collapse: collapse;
+    margin: 20px;
+    text-align: centre;
+    padding: 10px;
+    width: 80%;
+}
+
+
+
+#finalScores li {
+    margin: 10px;
+    font-size: 18px;
+}
+
+canvas {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 20px;
+    max-width: 90%;
+    background-color: white;
+}
